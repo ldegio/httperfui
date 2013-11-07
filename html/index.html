@@ -1,0 +1,84 @@
+<html>
+  <head>
+    <title></title>
+    <!-- Obtain Bootstrap style sheet from CDN (online service) so it doesn't have to be on my machine -->
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet" media="screen">    
+ 
+   <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+
+      .input-append .btn.dropdown-toggle {
+          float: none;
+      }
+    </style>
+ 
+ 
+  </head>
+  <body>
+    <!-- Obtain latest version of jquery automatically -->
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <!-- Obtain Bootstrap javascript from CDN (online service) so it doesn't have to be on my machine -->
+    <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"></script>
+    <script src="scripts/main.js"></script>
+
+    <div class="container">
+
+
+
+<form class="form-horizontal">
+
+<!-- Form Name -->
+<legend>httperf UI</legend>
+
+<span class="input-group-addon">URL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<div class="input-append btn-group">
+  <input id="idurl" type="text" class="form-control input-xxlarge" placeholder="">
+    <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+        <span class="caret"></span>
+    </a>
+    <ul id="idoldurls" class="dropdown-menu">
+        <li><a href="#">Editz</a></li>
+        <li><a href="#">Delete</a></li>
+        <li><a href="#">Ban</a></li>
+    </ul>
+</div>
+
+<br>
+<br>
+
+<div class="input-group1">
+  <span class="input-group-addon">Request Rate&nbsp;</span>
+  <input id="idrate" type="text" class="form-control input-small" placeholder="">
+</div>
+
+<br>
+
+<div class="input-group2">
+  <span class="input-group-addon"># Connections</span>
+  <input id="idconn" type="text" class="form-control input-small" placeholder="">
+</div>
+
+<br>
+<br>
+
+<!-- Button (Double) -->
+<button id="button1id" name="button1" class="btn btn-success" type="button" onclick="return on_start_click();">Start</button>
+<button id="button2id" name="button2" class="btn btn-danger" type="button" onclick="return on_stop_click();">Stop</button>
+
+<br>
+<br>
+
+<div class="status-group">
+  <span class="input-group-addon">Status:</span>
+  <span class="input-group-addon"> stopped</span>
+</div>
+
+</form>
+
+ 
+    </div> <!-- /container -->
+ 
+  </body>
+</html>
