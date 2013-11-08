@@ -1,6 +1,8 @@
 var pars = {};
 
 function on_start_click() {
+  $("#idstatusstr").html('Running');
+
   pars.rate = $("#idrate").val();
   pars.conn = $("#idconn").val();
   pars.lasturl = $("#idurl").val();
@@ -25,6 +27,8 @@ function on_start_click() {
 };
 
 function on_stop_click() {
+  $("#idstatusstr").html('Stopped');
+
   var pars = {};
 
   var posting = $.ajax("/stop", {
@@ -61,6 +65,21 @@ $(document).ready(function() {
     }
   })
   .fail(function() {
-    alert( "error" );
+    alert("error calling /last");
   })
 });
+
+function on_status_timeout() {
+  var jqxhr = $.get("/status", function(data) {
+    if(data.running === true) {
+      $("#idstatusstr").html('Running');
+    } else {
+      $("#idstatusstr").html('Stopped');
+    }
+  })
+  .fail(function() {
+    alert("error calling /status");
+  })
+}
+
+setInterval(on_status_timeout, 3000);

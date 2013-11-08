@@ -11,6 +11,7 @@ USERNAME = 'user'
 PASS = 'pass'
 
 settings = {}
+proc = {}
 
 def writeSettings():
 	with open('settings.json', 'w+') as outfile:
@@ -56,6 +57,27 @@ class myHandler(BaseHTTPRequestHandler):
 			string = json.dumps(settings)
 			print string
 			self.wfile.write(string)
+			return
+		if self.path=="/status":
+			global proc
+			running = False
+
+			try:
+				pr = proc.poll()
+
+				if pr == None:
+					running = True
+			except:
+				pass
+
+			res = {'running': running}
+			self.send_response(200)
+			self.send_header('Content-type','application/json')
+			self.end_headers()
+			string = json.dumps(res)
+			print string
+			self.wfile.write(string)
+			return
 
 		try:
 			#Check the file extension required and
@@ -94,10 +116,15 @@ class myHandler(BaseHTTPRequestHandler):
 	#Handler for the POST requests
 	def do_POST(self):
 		if self.path=="/start":
-			length = int(self.headers.getheader('content-length'))
 			global settings
+			global proc
+			length = int(self.headers.getheader('content-length'))
+			
 			settings = json.loads(self.rfile.read(length))
 
+			#
+			# Split the URL into the components that httperf likes
+			#
 			lurl = settings['lasturl']
 			if '//' in lurl:
 				prefix, lurl1 = lurl.split('//',1)
@@ -109,22 +136,39 @@ class myHandler(BaseHTTPRequestHandler):
 				server = lurl1
 				uri = '/'
 
-			print server
-			print uri
+			#
+			# before starting a new instance of httperf, kill the existing one(s)
+			#
+			try:
+				proc.terminate()
+			except:
+				pass
 
+			#
+			# Spawn httperf
+			#
 			cmd = ["httperf", "--server", server, "--uri", uri, "--num-conn", "1000000000", "--num-call", "1", "--rate", settings['rate']]
-			p = subprocess.Popen(cmd)
+			proc = subprocess.Popen(cmd)
 
+			print 'started'
+
+			#
+			# Update the settings with the ones coming from the client
+			#
 			with open('settings.json', 'w+') as outfile:
 				json.dump(settings, outfile)
 
 			self.send_response(200)
 			self.end_headers()
 			self.wfile.write("ok")
-			return			
+			return
 		if self.path=="/stop":
-			cmd = ["killall", "httperf"]
-			p = subprocess.Popen(cmd)
+			global proc
+
+			try:
+				proc.terminate()
+			except:
+				pass
 
 			print "stopped"
 
