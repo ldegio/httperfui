@@ -5,6 +5,7 @@ import cgi
 import json
 import subprocess
 import base64
+import sys
 
 PORT_NUMBER = 8000
 USERNAME = 'user'
@@ -176,29 +177,36 @@ class myHandler(BaseHTTPRequestHandler):
 			self.end_headers()
 			self.wfile.write("ok")
 			return			
-					
+
+#
+# If the port is specified on the command line, use it
+#
+if len(sys.argv) > 1:
+	PORT_NUMBER = int(sys.argv[1])
+	print PORT_NUMBER
+
+#
+# Load the config
+#
+try:
+	settings = json.loads(open('settings.json').read())
+except IOError:
+	settings['rate'] = 20;
+	settings['conn'] = 100;
+	settings['lasturl'] = '';
+	settings['urls'] = {};
+	writeSettings()
+
+#
+#Create a web server and define the handler to manage the
+#incoming request
+#
+server = HTTPServer(('', PORT_NUMBER), myHandler)
+print 'Started httpserver on port ' , PORT_NUMBER
+	
 try:
 	#
-	# Load the config
-	#
-	try:
-		settings = json.loads(open('settings.json').read())
-	except IOError:
-		settings['rate'] = 20;
-		settings['conn'] = 100;
-		settings['lasturl'] = '';
-		settings['urls'] = {};
-		writeSettings()
-
-	#
-	#Create a web server and define the handler to manage the
-	#incoming request
-	#
-	server = HTTPServer(('', PORT_NUMBER), myHandler)
-	print 'Started httpserver on port ' , PORT_NUMBER
-	
-	#
-	#Wait forever for incoming htto requests
+	# Wait forever for incoming htto requests
 	#
 	server.serve_forever()
 
