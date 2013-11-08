@@ -22,7 +22,7 @@ function on_start_click() {
   });
 
   posting.fail(function(data) {
-    alert("error");
+    $("#idstatusstr").html('error calling /start');
   });
 };
 
@@ -40,7 +40,7 @@ function on_stop_click() {
   });
 
   posting.fail(function(data) {
-    alert("error");
+    $("#idstatusstr").html('error calling /stop');
   });
 };
 
@@ -65,7 +65,7 @@ $(document).ready(function() {
     }
   })
   .fail(function() {
-    alert("error calling /last");
+    $("#idstatusstr").html('error calling /last');
   })
 });
 
@@ -78,7 +78,7 @@ function on_status_timeout() {
     }
   })
   .fail(function() {
-    alert("error calling /status");
+    $("#idstatusstr").html('error calling /status');
   })
 }
 
