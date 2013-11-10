@@ -204,6 +204,8 @@ except IOError:
 server = HTTPServer(('', PORT_NUMBER), myHandler)
 print 'Started httpserver on port ' , PORT_NUMBER
 	
+server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
 try:
 	#
 	# Wait forever for incoming htto requests
