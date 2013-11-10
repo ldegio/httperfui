@@ -6,6 +6,7 @@ import json
 import subprocess
 import base64
 import sys
+import socket
 
 PORT_NUMBER = 8000
 USERNAME = 'user'
