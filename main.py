@@ -46,6 +46,8 @@ class myHandler(BaseHTTPRequestHandler):
 				return False
 
 	def do_GET(self):
+		global proc
+
 		if not self.authenticate():
 			return
 
@@ -60,7 +62,6 @@ class myHandler(BaseHTTPRequestHandler):
 			self.wfile.write(string)
 			return
 		if self.path=="/status":
-			global proc
 			running = False
 
 			try:
@@ -116,9 +117,10 @@ class myHandler(BaseHTTPRequestHandler):
 
 	#Handler for the POST requests
 	def do_POST(self):
-		if self.path=="/start":
-			global settings
-			global proc
+		global settings
+		global proc
+
+		if self.path=="/start":			
 			length = int(self.headers.getheader('content-length'))
 			
 			settings = json.loads(self.rfile.read(length))
@@ -164,8 +166,6 @@ class myHandler(BaseHTTPRequestHandler):
 			self.wfile.write("ok")
 			return
 		if self.path=="/stop":
-			global proc
-
 			try:
 				proc.terminate()
 			except:
